@@ -1,0 +1,6 @@
+reserve nick
+reserve pedro
+bookSeat alex 3
+search nick
+search pedro
+search alex
