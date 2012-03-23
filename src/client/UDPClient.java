@@ -29,8 +29,8 @@ public class UDPClient {
 				address.parseAddr(line);
 				servers.add(address);
 			}
-			
-			
+
+
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -38,7 +38,7 @@ public class UDPClient {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		//now we have a list of servers. Try to connect to them sequentially.
 		for(ServerAddr addr : servers){
 			try {
@@ -56,7 +56,7 @@ public class UDPClient {
 				System.err.println(se);
 			}
 		}
-		
+
 	}
 
 
@@ -97,9 +97,9 @@ public class UDPClient {
 			this.hostname = hostname;
 			this.port = port;
 		}
-		
+
 		ServerAddr(){
-			
+
 		}
 
 		//parses string like "192.168.1.101:3033"
