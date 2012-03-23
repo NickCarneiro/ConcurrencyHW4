@@ -23,37 +23,43 @@ public class TCPHandleClient implements Runnable{
 		try {
 		    PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 		    BufferedReader in =  new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		    String getLine = in.readLine();
-		    StringTokenizer st = new StringTokenizer(getLine);
+		    String getLine;
+		    while((getLine = in.readLine()) != null){
+		    	StringTokenizer st = new StringTokenizer(getLine);
+			    String response;
+			    String tag = st.nextToken();
+			    String name = st.nextToken();
+			    
+			    
+			    
+			    if(tag.equals("search")) { //search reserve delete
+			    	System.out.println("searching for " + name);
+			    	response = t.searchName(name);
+			    	out.write(response + "\n");
+			    }
+			    else if(tag.equals("reserve")){
+			    	System.out.println("reserve for " + name);
+			    	response = t.reserveSeat(name);
+			    	out.write(response + "\n");
+			    }
+			    else if(tag.equals("delete")){
+			    	System.out.println("delete for " + name);
+			    	response = t.deleteReservation(name);
+			    	out.write(response + "\n");
+			    }
+			    else if(tag.equals("bookSeat")){
+			    	int num = Integer.parseInt(st.nextToken());
+			    	response = t.reserveSeat(name, num);
+			    	out.write(response + "\n");
+			    }
+			    else {
+			    	out.write("Error: Invalid Request. Please type either\nreserve <name>\n bookSeat <name> <num>\nsearch <name>\ndelete <name>\n");
+			    }
+			    out.flush();
+		    }
+		    System.out.println("Closing client socket");
+		    this.clientSocket.close();
 		    
-		    String response;
-		    String tag = st.nextToken();
-		    String name = st.nextToken();
-		    
-		    if(tag.equals("search")) { //search reserve delete
-		    	System.out.println("searching for " + name);
-		    	response = t.searchName(name);
-		    	out.write(response);
-		    }
-		    else if(tag.equals("reserve")){
-		    	System.out.println("reserve for " + name);
-		    	response = t.reserveSeat(name);
-		    	out.write(response);
-		    }
-		    else if(tag.equals("delete")){
-		    	System.out.println("delete for " + name);
-		    	response = t.deleteReservation(name);
-		    	out.write(response);
-		    }
-		    else if(tag.equals("bookSeat")){
-		    	int num = Integer.parseInt(st.nextToken());
-		    	response = t.reserveSeat(name, num);
-		    	out.write(response);
-		    }
-		    else {
-		    	out.write("Error: Invalid Request. Please type either\nreserve <name>\n bookSeat <name> <num>\nsearch <name>\ndelete <name>\n");
-		    }
-		    out.flush();
 		    out.close();
 		    in.close();
 		} 

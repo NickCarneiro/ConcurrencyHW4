@@ -3,44 +3,46 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.InetAddress;
 
 public class TCPServer {
-	//Theater t;
-	ServerSocket serverSocket;
+	Theater t;
+	ServerSocket listener;
 	private int port;
 	
-	public TCPServer(Integer port, Theater t, serverTextFile serverList){
+	public TCPServer(Integer port){
+		System.out.println("Initializing TCP Server");
+
 		this.port = port;
-		//this.t = t;
+		t = new Theater(100);
 		try{
+			
+			listener = new ServerSocket(this.port);
 		    while(true){
-		    	serverSocket = new ServerSocket(this.port);
-		    	InetAddress ipAddress = serverSocket.getInetAddress();
-		    	serverList.add(port, ipAddress);
+		    	
 		    	System.out.println("Waiting for a client connection...");
-			    Socket clientSocket = serverSocket.accept();
+			    Socket clientSocket = listener.accept();
 			    System.out.println("Got a client connection.");
-			    Thread thread = new Thread(new HandleClient(clientSocket, t));
+			    Thread thread = new Thread(new TCPHandleClient(clientSocket, t));
 			    thread.start();
-			    System.out.println("Shutting down Socket");
-			    serverSocket.close();
+			    
+			   
 		    }
+		    
 		} catch (IOException e) {
 			   System.out.println(e.getMessage());
+		} finally {
+			System.out.println("Shutting down Socket");
+		    try {
+				listener.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
-	
-	
 	public static void main(String[] args){
-		Theater t = new Theater(100);
-		serverTextFile serverList = new serverTextFile();
-		serverList.clear();
-		TCPServer server0 = new TCPServer(8080, t, serverList);
-		TCPServer server1 = new TCPServer(8022, t, serverList);
-		TCPServer server2 = new TCPServer(8013, t, serverList);
-
-		System.out.println("Starting Server");
+		TCPServer server = new TCPServer(8080);
+		System.out.println("Starting TCP Server");
 	}
 }
