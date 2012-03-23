@@ -21,7 +21,7 @@ public class Theater {
 
 	public Theater(Integer seat_count){
 		this.seats = new ArrayList<Integer>(seat_count);
-		names = new HashMap<String, Integer>(seat_count);
+		this.names = new HashMap<String, Integer>(seat_count);
 		//for this simple program we'll make seat numbers integers,
 		//but there's no reason this couldn't be an ArrayList of Strings
 		//like "Section 27 Row 10 Seat 3"
@@ -120,6 +120,6 @@ public class Theater {
 		names.remove(name);
 		//then add the seat number back into our array
 		seats.add(seat_number);
-
 	}
 }
+

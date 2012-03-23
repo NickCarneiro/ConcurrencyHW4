@@ -1,14 +1,12 @@
 package client;
 
-
-
 public class TestSuite {
-	
+
 	public static void main(String[] args){
-		
+
 		// run some tests and make sure the output is the same
 		correctnessTests();
-		
+
 	}
 
 	/*
@@ -16,7 +14,7 @@ public class TestSuite {
 	 */
 	private static void correctnessTests(){
 		UDPClient.run();
-		
+
 	}
-	
+
 }
