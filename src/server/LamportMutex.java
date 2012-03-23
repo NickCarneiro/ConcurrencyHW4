@@ -1,14 +1,18 @@
 package server;
-public class LamportMutex{
+
+import defaultpackage.Symbols;
+
+public class LamportMutex extends Process implements Lock {
     DirectClock v;
     int[] q; // request queue
     int myId;
     int N;
-    public LamportMutex() {
+    public LamportMutex(Linker initComm) {
+    	super(initComm);
         v = new DirectClock(N, myId);
         q = new int[N];
         for (int j = 0; j < N; j++)
-            q[j] = Integer.MAX_VALUE;
+            q[j] = Symbols.Infinity;
     }
     public synchronized void requestCS() {
         v.tick();
