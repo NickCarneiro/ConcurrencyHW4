@@ -13,6 +13,7 @@ public class TCPHandleClient implements Runnable{
 
 	private Socket clientSocket;
 	public Theater t;
+	private LamportMutex mutex;
 	
 	public TCPHandleClient(Socket clientSocket, Theater t) {
 		this.clientSocket = clientSocket;
@@ -21,6 +22,7 @@ public class TCPHandleClient implements Runnable{
 	
 	public void run() {
 		try {
+			mutex = new LamportMutex();
 		    PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 		    BufferedReader in =  new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		    String getLine;
@@ -39,7 +41,10 @@ public class TCPHandleClient implements Runnable{
 			    }
 			    else if(tag.equals("reserve")){
 			    	System.out.println("reserve for " + name);
+			    	mutex.requestCS();
 			    	response = t.reserveSeat(name);
+			    	// Update all other theaters
+			    	mutex.releaseCS();
 			    	out.write(response + "\n");
 			    }
 			    else if(tag.equals("delete")){

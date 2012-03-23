@@ -2,7 +2,7 @@ package server;
 
 import defaultpackage.Symbols;
 
-public class LamportMutex extends Process implements Lock {
+public class LamportMutex {
     DirectClock v;
     int[] q; // request queue
     int myId;
@@ -39,6 +39,18 @@ public class LamportMutex extends Process implements Lock {
         return ((entry1 > entry2)
                 || ((entry1 == entry2) && (pid1 > pid2)));
     }
+    // String command contains the granted Theater command from a server with CS permission.
+    public synchronized void handleMsg(Msg m, int src, String tag, String command) {
+        int timeStamp = m.getMessageInt();
+        v.receiveAction(src, timeStamp);
+        if (tag.equals("request")) {
+            q[src] = timeStamp;
+            sendMsg(src, "ack", v.getValue(myId));
+        } else if (tag.equals("release"))
+            q[src] = Symbols.Infinity;
+        notify(); // okayCS() may be true now
+    }
+    
     public synchronized void handleMsg(Msg m, int src, String tag) {
         int timeStamp = m.getMessageInt();
         v.receiveAction(src, timeStamp);
@@ -49,4 +61,5 @@ public class LamportMutex extends Process implements Lock {
             q[src] = Symbols.Infinity;
         notify(); // okayCS() may be true now
     }
+    
 }

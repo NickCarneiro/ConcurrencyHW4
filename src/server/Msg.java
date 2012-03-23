@@ -25,4 +25,10 @@ public class Msg {
                     tag + " " + msgBuf.toString() ;
         return s;
     }
+	public int getSrcId() {
+		return srcId;
+	}
+	public String getTag() {
+		return tag;
+	}
 }

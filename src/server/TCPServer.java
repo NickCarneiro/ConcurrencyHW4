@@ -3,16 +3,26 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
-public class TCPServer {
+public class TCPServer implements Runnable{
 	Theater t;
 	ServerSocket listener;
 	private int port;
+	private int id;
+	private ArrayList<ServerAddr> servers;
 	
-	public TCPServer(Integer port){
-		System.out.println("Initializing TCP Server");
-
+	public TCPServer(Integer port, Integer id, ArrayList<ServerAddr> servers){
 		this.port = port;
+		this.id = id;
+		this.servers = servers;
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		System.out.println("Running TCP Server");
+
 		t = new Theater(100);
 		try{
 			
@@ -39,10 +49,5 @@ public class TCPServer {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	public static void main(String[] args){
-		TCPServer server = new TCPServer(8080);
-		System.out.println("Starting TCP Server");
 	}
 }
