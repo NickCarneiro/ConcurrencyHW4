@@ -37,9 +37,8 @@ public class TestSuite {
 			// Service commands as long as they are in the text file
 			while((req = br_req.readLine()) != null){ 
 
-				//System.out.println("Sending message.");			
 				client.out.println(req);
-				System.out.println(req);
+				System.out.println("Sending " + req);
 				String res = client.in.readLine();
 				System.out.println("Response: " + res);
 			}

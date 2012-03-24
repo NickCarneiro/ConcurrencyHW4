@@ -17,20 +17,22 @@ public class TCPHandleClient implements Runnable{
 	private LamportMutex mutex;
 	private DirectClock clock;
 	private ArrayList<ServerAddr> servers;
-	public TCPHandleClient(Socket clientSocket, Theater t, DirectClock clock, ArrayList<ServerAddr> servers) {
+	public TCPHandleClient(Socket clientSocket, Theater t, DirectClock clock, ArrayList<ServerAddr> servers, LamportMutex mutex) {
 		this.clientSocket = clientSocket;
 		this.t = t;
 		this.clock = clock;
 		this.servers = servers;
+		this.mutex = mutex;
 	}
 	
 	public void run() {
 		try {
-			mutex = new LamportMutex(clock, servers);
+			
 		    PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 		    BufferedReader in =  new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		    String getLine;
 		    while((getLine = in.readLine()) != null){
+		    	System.out.println("got command " + getLine);
 		    	String[] commandArray = getLine.split(" ");
 		    	
 		    	//special mutex commands are handled in LamportMutex,

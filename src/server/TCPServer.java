@@ -12,12 +12,13 @@ public class TCPServer implements Runnable{
 	private int id;
 	private ArrayList<ServerAddr> servers;
 	private DirectClock clock;
-	
+	private LamportMutex mutex;
 	public TCPServer(Integer port, Integer id, ArrayList<ServerAddr> servers){
 		this.port = port;
 		this.id = id;
 		this.servers = servers;
 		this.clock = new DirectClock(servers.size(), id);
+		this.mutex = new LamportMutex(clock, servers);
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class TCPServer implements Runnable{
 		    	System.out.println("Waiting for a client connection...");
 			    Socket clientSocket = listener.accept();
 			    System.out.println("Got a client connection.");
-			    Thread thread = new Thread(new TCPHandleClient(clientSocket, t, clock, servers));
+			    Thread thread = new Thread(new TCPHandleClient(clientSocket, t, clock, servers, mutex));
 			    thread.start();
 			    
 			   

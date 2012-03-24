@@ -50,19 +50,29 @@ public class LamportMutex {
 		//syntax: mutex {request | release | ok} <my id> <my clock value> <my timestamp>
 		broadcastMessage("mutex release " + myId + clock.getValue(myId) + " " + queue[myId]);
 	}
+	
+	//returns true when this server has the lowest timestamp of all servers in the clock array
 	boolean okayCS() {
 		for (int j = 0; j < servers.size(); j++){
-			if (isGreater(queue[myId], myId, queue[j], j))
+			if (isGreater(queue[myId], myId, queue[j], j)){
 				return false;
-			if (isGreater(queue[myId], myId, clock.getValue(j), j))
+			}
+				
+			if (isGreater(queue[myId], myId, clock.getValue(j), j)){
 				return false;
+			}
+				
 		}
 		return true;
 	}
+	
+	//returns true if first entry1 is greater
 	boolean isGreater(int entry1, int pid1, int entry2, int pid2) {
-		if (entry2 == Integer.MAX_VALUE) return false;
-		return ((entry1 > entry2)
-				|| ((entry1 == entry2) && (pid1 > pid2)));
+		if (entry2 == Integer.MAX_VALUE){
+			return false;
+		}
+		
+		return ((entry1 > entry2) || ((entry1 == entry2) && (pid1 > pid2)));
 	}
 
 
@@ -87,9 +97,17 @@ public class LamportMutex {
 		if (command.equals("request")) {
 			queue[msg_id] = msg_clock;
 			sendMessage("mutex ack " + myId + " " + clock.getValue(myId), servers.get(myId));
-		} else if (command.equals("release"))
+		} else if (command.equals("release")){
 			queue[msg_id] = Integer.MAX_VALUE;
+		} else {
+			
+		}
+			
 		notify(); // okayCS() may be true now
+		for(int i = 0; i < queue.length; i++){
+			System.out.print(i + "["+ queue[i] +"] ");
+		}
+		System.out.println("");
 	}
 
 	public void broadcastMessage(String message){

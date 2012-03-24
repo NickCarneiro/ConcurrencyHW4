@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/*
+ * Use the main method to launch a server for every address specified in servers.txt
+ */
 public class TCPServerLaunch {
 	private static ArrayList<ServerAddr> servers;
 	
