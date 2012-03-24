@@ -24,11 +24,10 @@ public class TCPServerLaunch {
 			//launch a server in a separate thread for each line in servers.txt
 			
 			for(int i = 0; i < servers.size(); i++){
-				ServerAddr address = new ServerAddr();
-				address.parseAddr(line);
+				
 				//give each server a unique id and a full list of servers
-			    Thread thread = new Thread(new TCPServer(Integer.parseInt(address.port), i, servers));
-			    System.out.println("Starting TCP Server" + address.port);
+			    Thread thread = new Thread(new TCPServer(Integer.parseInt(servers.get(i).port), i, servers));
+			    System.out.println("Starting TCP Server" + servers.get(i).port);
 			    thread.start();
 			}
 
