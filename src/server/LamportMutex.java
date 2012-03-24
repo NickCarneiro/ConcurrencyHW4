@@ -37,6 +37,9 @@ public class LamportMutex {
 			//syntax: mutex {request | release | ok} <my id> <my clock value> <my timestamp>
 			broadcastMessage("mutex request " + myId + " " + clock.getValue(myId) + " " + queue[myId]);
 			while (!okayCS()){
+				printQueue();
+				printClock();
+				System.out.println("okayCS was false. Waiting...");
 				wait();
 			}
 
@@ -94,7 +97,11 @@ public class LamportMutex {
 		
 		String command = messageArray[1];
 		int msg_id = Integer.parseInt(messageArray[2]);
+		
+		//clock timestamp
 		int msg_clock = Integer.parseInt(messageArray[3]);
+		
+		//queue timestamp
 		int msg_timestamp = Integer.parseInt(messageArray[4]);
 		
 		clock.receiveAction(msg_id, msg_clock);
@@ -108,24 +115,28 @@ public class LamportMutex {
 			int ack_id = Integer.parseInt(messageArray[2]);
 			int ack_clock = Integer.parseInt(messageArray[3]);
 			
-			clock.receiveAction(ack_id, ack_clock);
-			queue[ack_id] = msg_timestamp;
+			queue[msg_id] = msg_timestamp;
 			
 		} else {
 			throw new IllegalArgumentException("Bad mutex command syntax: " + message);
 		}
 			
 		notify(); // okayCS() may be true now
-		for(int i = 0; i < queue.length; i++){
-			System.out.print(i + "["+ queue[i] +"] ");
-		}
+		
 		System.out.println("");
 	}
 
+	
 	public void broadcastMessage(String message){
 		//send message to everyone
+		int server_index = 0;
 		for(ServerAddr server : servers){
-			sendMessage(message, server);
+			//only send messages to servers that aren't me.
+			if(server_index != myId){
+				sendMessage(message, server);
+			}
+			
+			server_index++;
 		}
 	}
 
@@ -160,5 +171,23 @@ public class LamportMutex {
 			System.out.println("Could not send server message to " + dest.hostname + ":" + dest.port);
 		}
 
+	}
+	
+	/**
+	 * debug function to see state of queue
+	 */
+	private void printQueue(){
+		System.out.print("queue timestamps: ");
+		for(int i = 0; i < queue.length; i++){
+			System.out.print(i + "["+ queue[i] +"] ");
+		}
+	}
+	
+	private void printClock(){
+		System.out.print("clock timestamps: ");
+		for(int i = 0; i < clock.clock.length; i++){
+			System.out.print(i + "["+ clock.getValue(i) +"] ");
+		}
+		System.out.println("");
 	}
 }
