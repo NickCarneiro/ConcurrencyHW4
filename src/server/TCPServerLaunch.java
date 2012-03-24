@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class TCPServerLaunch {
 	private static ArrayList<ServerAddr> servers;
-	
+
 	public static void main(String[] args){
 		BufferedReader br;
 		try {
@@ -23,15 +23,15 @@ public class TCPServerLaunch {
 				address.parseAddr(line);
 				servers.add(address);
 			}
-			
+
 			//launch a server in a separate thread for each line in servers.txt
-			
+
 			for(int i = 0; i < servers.size(); i++){
-				
+
 				//give each server a unique id and a full list of servers
-			    Thread thread = new Thread(new TCPServer(Integer.parseInt(servers.get(i).port), i, servers));
-			    System.out.println("Starting TCP Server" + servers.get(i).port);
-			    thread.start();
+				Thread thread = new Thread(new TCPServer(Integer.parseInt(servers.get(i).port), i, servers));
+				System.out.println("Starting TCP Server "+ i + " on port " + servers.get(i).port);
+				thread.start();
 			}
 
 		} catch (FileNotFoundException e1) {

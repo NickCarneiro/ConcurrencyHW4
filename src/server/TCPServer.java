@@ -18,7 +18,7 @@ public class TCPServer implements Runnable{
 		this.id = id;
 		this.servers = servers;
 		this.clock = new DirectClock(servers.size(), id);
-		this.mutex = new LamportMutex(clock, servers);
+		this.mutex = new LamportMutex(clock, servers, id);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class TCPServer implements Runnable{
 		    	//System.out.println("Waiting for a client connection...");
 			    Socket clientSocket = listener.accept();
 			    //System.out.println("Got a client connection.");
-			    Thread thread = new Thread(new TCPHandleClient(clientSocket, t, clock, servers, mutex));
+			    Thread thread = new Thread(new TCPHandleClient(clientSocket, t, clock, servers, mutex, this.id));
 			    thread.start();
 			    
 			   

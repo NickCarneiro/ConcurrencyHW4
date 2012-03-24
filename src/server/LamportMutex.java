@@ -13,11 +13,11 @@ public class LamportMutex {
 	int myId;
 	private DirectClock clock;
 	private ArrayList<ServerAddr> servers;
-	public LamportMutex(DirectClock clock, ArrayList<ServerAddr> servers) {
+	public LamportMutex(DirectClock clock, ArrayList<ServerAddr> servers, int myId) {
 		this.clock = clock;
 		this.queue = new int[servers.size()];
 		this.servers = servers;
-
+		this.myId = myId;
 		//each slot in queue array represents process id at that index.
 		//the integer value in each slot determines priority
 
@@ -96,6 +96,8 @@ public class LamportMutex {
 		}
 		
 		String command = messageArray[1];
+		
+		//id of source server
 		int msg_id = Integer.parseInt(messageArray[2]);
 		
 		//clock timestamp
@@ -107,7 +109,7 @@ public class LamportMutex {
 		clock.receiveAction(msg_id, msg_clock);
 		if (command.equals("request")) {
 			queue[msg_id] = msg_clock;
-			sendMessage("mutex ack " + myId + " " + clock.getValue(myId) + " " + queue[myId], servers.get(myId));
+			sendMessage("mutex ack " + myId + " " + clock.getValue(myId) + " " + queue[myId], servers.get(msg_id));
 		} else if (command.equals("release")){
 			queue[msg_id] = Integer.MAX_VALUE;
 		} else if (command.equals("ack")) {
@@ -152,14 +154,10 @@ public class LamportMutex {
 			clock.sendAction();
 			//open a TCP socket to dest, send the message, and close the socket.
 			InetAddress ia = InetAddress.getByName(dest.hostname);
-
-
 			Socket socket;
-
 			socket = new Socket(ia, Integer.parseInt(dest.port));
-
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-
+			System.out.println("[" + this.myId + "] sending: " + message); 
 			out.write(message);
 			out.flush();
 			socket.close();
