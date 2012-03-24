@@ -8,17 +8,17 @@ public class DirectClock {
         for (int i = 0; i < numProc; i++) clock[i] = 0;
         clock[myId] = 1;
     }
-    public int getValue(int i) {
+    public synchronized int getValue(int i) {
         return clock[i];
     }
-    public void tick() {
+    public synchronized void tick() {
         clock[myId]++;
     }
     public void sendAction() {
         // sentValue = clock[myId];
         tick();
     }
-    public void receiveAction(int sender, int sentValue) {
+    public synchronized void receiveAction(int sender, int sentValue) {
         clock[sender] = java.lang.Math.max(clock[sender], sentValue);
         clock[myId] = java.lang.Math.max(clock[myId], sentValue) + 1;
     }
