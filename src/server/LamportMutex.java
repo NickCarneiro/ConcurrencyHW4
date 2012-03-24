@@ -71,8 +71,11 @@ public class LamportMutex {
 
 	//syntax: mutex {request | release | ok} <my id> <my clock value> <my timestamp>
 	//examples: mutex request 0  3
-	public synchronized void handleServerMessage(String message) {
+	public synchronized void handleMutexMessage(String message) {
 		String[] messageArray = message.split(" ");
+		if(!messageArray[0].equals("mutex")){
+			throw new IllegalArgumentException("Non-mutex command passed to handleMutexrMessage");
+		}
 		String command = messageArray[1];
 		int msg_id = Integer.parseInt(messageArray[2]);
 		int msg_clock = Integer.parseInt(messageArray[3]);
