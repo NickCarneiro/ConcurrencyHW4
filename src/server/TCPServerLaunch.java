@@ -42,8 +42,5 @@ public class TCPServerLaunch {
 			e.printStackTrace();
 		}
 
-		
-
-
 	}
 }

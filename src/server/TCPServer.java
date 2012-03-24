@@ -32,9 +32,9 @@ public class TCPServer implements Runnable{
 			listener = new ServerSocket(this.port);
 		    while(true){
 		    	
-		    	System.out.println("Waiting for a client connection...");
+		    	//System.out.println("Waiting for a client connection...");
 			    Socket clientSocket = listener.accept();
-			    System.out.println("Got a client connection.");
+			    //System.out.println("Got a client connection.");
 			    Thread thread = new Thread(new TCPHandleClient(clientSocket, t, clock, servers, mutex));
 			    thread.start();
 			    
