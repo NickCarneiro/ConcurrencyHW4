@@ -11,11 +11,13 @@ public class TCPServer implements Runnable{
 	private int port;
 	private int id;
 	private ArrayList<ServerAddr> servers;
+	private DirectClock clock;
 	
 	public TCPServer(Integer port, Integer id, ArrayList<ServerAddr> servers){
 		this.port = port;
 		this.id = id;
 		this.servers = servers;
+		this.clock = new DirectClock(servers.size(), id);
 	}
 
 	@Override

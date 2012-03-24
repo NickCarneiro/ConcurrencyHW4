@@ -1,5 +1,4 @@
 package server;
-
 public class DirectClock {
     public int[] clock;
     int myId;
