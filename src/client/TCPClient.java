@@ -28,6 +28,7 @@ public class TCPClient {
 	private String host;
 	protected PrintWriter out;
 	protected BufferedReader in;
+
 	
 	Socket socket;
 	
@@ -39,7 +40,7 @@ public class TCPClient {
 		servers = new ArrayList<ServerAddr>();
 		BufferedReader br;
 		try {
-			br = new BufferedReader(new FileReader("servers.txt"));
+			br = new BufferedReader(new FileReader("client_servers.txt"));
 
 			String line;
 			//read in servers.txt and save in arraylist
@@ -68,6 +69,7 @@ public class TCPClient {
 				
 				
 				socket = new Socket(this.ia, this.port);
+				socket.setSoTimeout(5000);
 				out = new PrintWriter(socket.getOutputStream(), true);
 				in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				
@@ -77,7 +79,7 @@ public class TCPClient {
 			} catch (UnknownHostException e) {
 				System.err.println("Could not connect to server " + addr.hostname + ":" + addr.port + e);
 			} catch (SocketException se) {
-				System.err.println(se);
+				System.err.println("Could not connect to server " + addr.hostname + ":" + addr.port + se);
 			}
 		}
 		

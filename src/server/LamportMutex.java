@@ -39,7 +39,7 @@ public class LamportMutex {
 			while (!okayCS()){
 				printQueue();
 				printClock();
-				System.out.println("okayCS was false. Waiting...");
+				System.out.println("server [" + this.myId + "] okayCS was false. Waiting...");
 				wait();
 			}
 
@@ -123,7 +123,7 @@ public class LamportMutex {
 			throw new IllegalArgumentException("Bad mutex command syntax: " + message);
 		}
 			
-		notify(); // okayCS() may be true now
+		notifyAll(); // okayCS() may be true now
 		
 		System.out.println("");
 	}
@@ -157,7 +157,7 @@ public class LamportMutex {
 			Socket socket;
 			socket = new Socket(ia, Integer.parseInt(dest.port));
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-			System.out.println("[" + this.myId + "] sending: " + message); 
+			System.out.println("server [" + this.myId + "] sending: " + message); 
 			out.write(message);
 			out.flush();
 			socket.close();
@@ -175,14 +175,14 @@ public class LamportMutex {
 	 * debug function to see state of queue
 	 */
 	private void printQueue(){
-		System.out.print("queue timestamps: ");
+		System.out.print("server [" + this.myId + "] queue timestamps: ");
 		for(int i = 0; i < queue.length; i++){
 			System.out.print(i + "["+ queue[i] +"] ");
 		}
 	}
 	
 	private void printClock(){
-		System.out.print("clock timestamps: ");
+		System.out.print("server [" + this.myId + "] clock timestamps: ");
 		for(int i = 0; i < clock.clock.length; i++){
 			System.out.print(i + "["+ clock.getValue(i) +"] ");
 		}

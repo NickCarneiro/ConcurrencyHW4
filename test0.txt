@@ -1,0 +1,13 @@
+reserve nick
+reserve pedro
+bookSeat alex 3
+search nick
+search pedro
+search alex
+delete nick
+reserve john
+reserve james
+reserve jack
+search james
+search nick
+bookseat nick 3

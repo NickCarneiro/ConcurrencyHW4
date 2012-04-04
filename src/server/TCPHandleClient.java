@@ -34,7 +34,7 @@ public class TCPHandleClient implements Runnable{
 		    BufferedReader in =  new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		    String getLine;
 		    while((getLine = in.readLine()) != null){
-		    	System.out.println("["+this.myId+"] got: " + getLine);
+		    	System.out.println("Server ["+this.myId+"] got: " + getLine);
 		    	String[] commandArray = getLine.split(" ");
 		    	
 		    	//special mutex commands are handled in LamportMutex,

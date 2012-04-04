@@ -5,19 +5,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-public class TestSuite {
 
-	public static void main(String[] args){
-
-		// run some tests and make sure the output is the same
-		TCPTest();
-
+public class TCPClientLaunch implements Runnable{
+	private String input_file;
+	
+	TCPClientLaunch(String input_file){
+		this.input_file = input_file;
 	}
-
-	/*
-	 * Test basic correctness
-	 */
-	private static void TCPTest(){
+	@Override
+	public void run() {
 
 		try {
 			// testfile.txt is a text full of commands. 
@@ -27,7 +23,7 @@ public class TestSuite {
 			// The server then waits for a new client to send a request
 
 			String req, list;
-			BufferedReader br_req = new BufferedReader(new FileReader("testfile.txt"));
+			BufferedReader br_req = new BufferedReader(new FileReader(input_file));
 			String getLine;
 			StringTokenizer st;		    
 			String ip, port_id; 
@@ -38,19 +34,29 @@ public class TestSuite {
 			while((req = br_req.readLine()) != null){ 
 
 				client.out.println(req);
-				System.out.println("Sending " + req);
+				System.out.println("[" + input_file + "] Sending " + req);
 				String res = client.in.readLine();
-				System.out.println("Response: " + res);
+				System.out.println("[" + input_file + "] Response: " + res);
 			}
 			
 			
-			System.out.println("Got response from server. Shutting down client.");
+			System.out.println("Finished processing " + input_file + ". Shutting down client.");
 			client.close(); 
 			
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
-
+		
+	}
+	
+	public static void main(String args[]){
+		String[] input_files = {"test0.txt", "test1.txt"};
+		for(String file : input_files){
+			Thread t = new Thread(new TCPClientLaunch(file));
+			t.start();
+		}
+		
+		//System.exit(0);
 	}
 
 }
